@@ -1,0 +1,123 @@
+use Tpark;
+/*create table Motor_transport (code_auto Integer primary key identity,name Varchar(255), hour integer,mileage integer,count_repairs integer,characteristic Varchar(255))
+go
+
+create table Drivers ( code_drivers integer primary key identity,surname Varchar(255), name Varchar (255), patronymic Varchar (255), year_of_birth Integer, year_of_employment Integer, experience Integer, job_title Varchar(255), sex Varchar (255), adress Varchar(255),city Varchar (255), telephone Varchar(255))
+go
+create table Service_staff ( code_service_staff Integer primary key identity,surname Varchar(255), name Varchar (255), patronymic Varchar (255), year_of_birth Integer, year_of_employment Integer,experience Integer, job_title Varchar(255), sex Varchar (255), adress Varchar(255),city Varchar (255), telephone Varchar(255))
+go
+create table Garage_economy ( code_garage_economy Integer primary key identity,name_of_garage Varchar(255), type_transport_on_repair integer, foreign key (type_transport_on_repair ) references Motor_transport (code_auto) on delete cascade on update cascade,type_of_repair Varchar(255), date_of_start_repair date, date_of_end_repair date, result_of_repair varchar(255),job_worker Integer, foreign key (job_worker) references Service_staff(code_service_staff) on update cascade on delete cascade)
+create table Route ( code_route Integer primary key identity,name_route Varchar(255), type_transport Integer, foreign key (type_transport) references Motor_transport (code_auto) on delete cascade on update cascade,name_driver Integer, foreign key (name_driver) references Drivers(code_drivers) on delete cascade on update cascade, shedule date)
+go*/
+
+
+
+Присваиваем привелегии ролям
+
+Две роли менеджер и водитель
+
+
+
+GRANT DELETE, INSERT, UPDATE, SELECT ON  Drivers TO Manager // Присвоить какие функции ON название таблицы TO кому
+GRANT EXECUTE TO Manager
+go
+
+GRANT DELETE, INSERT, UPDATE, SELECT ON  Garage_economy TO Manager
+GRANT EXECUTE TO Manager
+
+go
+
+GRANT DELETE, INSERT, UPDATE, SELECT ON  Motor_transport TO Manager
+GRANT EXECUTE TO Manager
+
+go
+
+GRANT DELETE, INSERT, UPDATE, SELECT ON  Route TO Manager
+GRANT EXECUTE TO Manager
+
+go 
+
+GRANT DELETE, INSERT, UPDATE, SELECT ON  Service_staff TO Manager
+GRANT EXECUTE TO Manager
+
+go
+
+/*
+*/
+GRANT SELECT ON  Drivers TO Driver
+GRANT EXECUTE TO Driver
+go
+
+GRANT SELECT ON  Garage_economy TO Driver
+GRANT EXECUTE TO Driver
+
+go
+
+GRANT SELECT ON  Motor_transport TO Driver
+GRANT EXECUTE TO Driver
+
+go
+
+GRANT SELECT ON  Route TO Driver
+GRANT EXECUTE TO Driver
+
+go 
+
+GRANT SELECT ON  Service_staff TO Driver
+GRANT EXECUTE TO Driver
+
+go
+
+
+
+3 типа файлов
+1. Первичные --> хранение данных для начальных действий с БД (mdf)
+2. Вторичные --> Вспомогательные для чтения/записи (ndf)
+3. Файлы журналов --> транзакции (ldf)
+
+
+MS SQL Server два класса приложений для клиента
+1. Transact SQL с расширением ODBC
+2. web-приложения с запросами языка Xpath
+
+Используют API БД OLE DB // ODBC
+
+sp_grantlogin --> соединение с Microsoft SQL Server
+
+sp_addrole --> новая роль в БД
+
+sp_adduser --> новый пользователь
+
+///////////
+
+Создание новой учетной записи для БД (страница 20)
+
+Роли
+public --> просмотр
+Db_owner --> любые действия
+Db_ddladmin --> админ
+
+
+Добавление роли
+USE название БД
+EXEC sp_addrole 'название роли'
+
+GRANT select, update (Sales,num) ON название бд TO название роли (имя)
+GTANT EXECUTE TO DEKAN
+
+Создание пользователей с ролями
+
+EXEC sp_addlogin 'name', 'name', 'БД' use БД
+sp_adduser
+sp_addrolemember
+
+REVOKE отмена привелегий
+
+
+Часть 2
+Логическая структура --> структура таблиц и их взаимосвязи
+
+Физическая --> описание файлов 
+
+
+

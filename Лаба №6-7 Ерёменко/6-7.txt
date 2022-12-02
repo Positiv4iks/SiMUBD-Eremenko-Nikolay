@@ -1,0 +1,136 @@
+
+db.towns.find({"mayor.party": "I"}, {_id: false, populatiuon: false, last_sensus: false, famous_for: false})
+
+db.towns.find({"mayor.party": {$exists: false}}, {_id: false, populatiuon: false, last_sensus: false, famous_for: false})
+
+var cursor = db.unicorns.find({gender:"m"});null;
+cursor.limit(2).sort({name:1});null;
+cursor.forEach(function(obj){print(obj.name);})
+
+db.unicorns.find({gender: "f", weight: {$gt : 500, $lt: 600}}, {_id: false}).count()
+
+db.unicorns.aggregate({"$group":{_id:"$gender",count:{$sum:1}}}) 
+
+db.unicorns.save({name: 'Barny', loves: ['grape'], weight: 340, gender: 'm'})
+
+db.unicorns.updateOne({name : "Ayna"}, {$set: {weight: 800, vampires : 51}}, {upsert: true})
+
+db.unicorns.updateOne({name : "Raleigh"}, {$set: {loves: ["redbull"]}}, {upsert: true})
+
+db.unicorns.updateMany({}, {$inc: {vampires: 5}}, {multi:true})
+
+db.towns.updateOne({name: "Portland"}, {$set: {"mayor.party": ""}}, {upsert: true})
+
+db.unicorns.updateOne({name : "Pilot"}, {$push: {loves: "chocolate"}}, {upsert: true})
+
+db.unicorns.updateOne({name : "Aurora"}, {$push: {loves: "sugar", "limons"}}, {upsert: true})
+
+db.towns.remove({"mayor.party": ""})
+    db.towns.remove({})
+
+db.createCollection("areas")  
+db.areas.insert({_id:"field", name:"Magic Fileds"})
+db.areas.insert({_id:"clouds", name:"Magic Clouds"})
+db.unicorns.insert({name: 'New', dob: new Date(1976, 6, 18, 18, 18), loves: ['grape', 'watermelon'], weight: 704, gender: 'm', vampires: 165, area:{$ref:"areas", $id: "field"}})
+db.unicorns.updateOne({_id:ObjectId("636a5020f6cb7fcb498e2d01")},{$set: {area:{$ref:"areas", $id: "clouds"}}})
+	
+db.unicorns.ensureIndex({"name" : 1}, {"unique" : true}) 
+db.unicorns.getIndexes()
+db.unicorns.dropIndex("name_1")
+}
+
+db.createCollection("numbers") 
+for(i = 0; i < 100000; i++){db.numbers.insert({value: i})}
+db.numbers.find().sort({$natural:-1}).limit(4)
+db.numbers.explain("executionStats").find({})
+db.numbers.ensureIndex({"value" : 1})
+db.numbers.dropIndex("value_1")
+
+
+
+Кратко по командам (теория)
+
+db.users.insert({"name": "Check", "age": 55})
+
+
+1. Поиск по параметрам        // db.users.find({"company.name": "EPAM"})
+2. Математические функции     // function name(a,b) {return a+b;}
+3. Курсор                     // var cursor = db.users.find(); null;
+4. count по параметарм        // db.users.find({age: {$gt : 25, $lt: 40}}).count()
+5. Уникальные                 // db.users.distinct("name")
+6. Агрегация GROUP BY         // db.users.aggregate({"$group":{_id:"$name",count:{$sum:1}}})
+
+7. Обновление
+db.users.update({name : "Vova"},{$set: {name: "Vova", age : 57, check: "check"}})
+
+8. Лишнее поле
+db.users.update({name : "Vova"}, {$unset: {check: 1}})
+
+9. Значение в массив // $push // $addToSet (если нет)
+db.users.update({name : "Lera"}, {$addToSet: {lan: "english"}})
+
+10. Убрать значение
+db.users.update({name : "Lera"}, {$pull: {lan: "english"}})
+
+11. Убрать документ 
+
+db.users.remove({name : "Vova"}, true)
+
+db.users.remove({age: {$lt : 15}})
+
+
+
+// Курсор
+var cursor = db.users.find(); null;
+while(cursor.hasNext()){obj = cursor.next();print(obj["name"]);}
+
+// Курсор 
+var cursor = db.users.find();null;
+cursor.sort({age:1}).limit(2);null;
+cursor.forEach(function(obj){print(obj.name),print(obj.age);})
+
+
+Ссылки
+db.companies.insert({"_id" : "microsoft", year: 1974})
+
+db.workers.insert({name: "Tom", age: 28, company: "microsoft"})
+
+
+user = db.workers.findOne()
+db.companies.findOne({_id: user.company})
+
+
+================================================================
+
+Автоматическое связывание
+
+db.countries.insert({_id:"us", name:"US"})
+
+db.workers.update({_id:ObjectId("63756943e5b98fcf2259070f")},{$set:
+        {country:{$ref:"countries", $id: "us"}}})
+
+var tom=db.workers.findOne({"_id":ObjectId("63756943e5b98fcf2259070f")})
+
+db.countries.findOne({_id:tom.country.$id})
+
+
+
+================================================================
+
+
+Индексы
+
+Индекс определенного поля --> ускорение поиска
+Колода карт --> по масти и рандом
+
+
+Индекс              // db.checkIndex.ensureIndex({"name" : 1})
+
+Уникальный индекс   // db.checkIndex.ensureIndex({"name" : 1}, {"unique" : true}) 
+
+Убрать              // db.checkIndex.dropIndex("name_1")
+
+Все индексы         // db.system.indexes.find()
+
+Инфа об индексах    // db.checkIndex.getIndexes()
+

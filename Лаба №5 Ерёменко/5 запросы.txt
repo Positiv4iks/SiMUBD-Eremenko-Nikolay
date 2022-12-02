@@ -1,0 +1,154 @@
+Лабораторная работа №5
+db.unicorns.find({name: "Leia"}, {gender: 1})
+
+db.unicorns.find({name: "Leia"}, {gender: 0})
+
+
+db.unicorns.find({gender:'f'}).sort({name:1});
+
+
+db.unicorns.find({gender:'f'}).skip(3);
+
+db.unicorns.find({gender:'f'}).limit(3);
+
+db.unicorns.findOne({name:'Leia'});
+
+db.unicorns.find({gender:'f',name:'Leia'});
+
+db.unicorns.find({gender:'f'});
+
+db.stats();
+
+db.unicorns.insert({name: 'Nimue', dob: new Date(1999, 11, 20, 16, 15), loves: ['grape', 'carrot'], weight: 540, gender: 'f'});
+
+db.unicorns.find({gender:'f'}).sort({$natural :-1}).limit(3);
+
+db.unicorns.find({name:'Leia'},{loves:{$slice:-1}});
+
+db.unicorns.find ({vampires: {$lt : 30}});
+
+db.unicorns.find ({vampires: {$ne : 2}});
+
+db.unicorns.find ({vampires: {$in : [0,2]}});
+
+db.unicorns.find ({vampires: {$nin : [63,43]}});
+db.unicorns.find ({loves: {$all : ['carrot']}});
+
+db.unicorns.find ({$or : [{name: "Leia"}, {vampires: 63}]});
+
+db.unicorns.find ({name: {$exists:true}});
+
+db.unicorns.find ({name: {$regex:"L"}});
+
+db.unicorns.find ({name: {$regex:"ia$"}});
+
+
+
+
+
+
+Теория
+
+???
+MongoDB —> документо-ориентированная БД
+Гибко // Легко // Масштабируется // Неструктурированные данные
+
+NoSQL —> не только SQL
+
+Реляционные —> несколько таблиц с НФ
+NoSQL —> ключ-значение
+
+BSON —> binary JavaScript Object Notation
+Больше места
+
+Таблица (SQL) —> Коллекция (M)
+Строка/Запись (SQL) —> Документ (M)
+
+Команды
+db.help()
+db.stats()
+
+т.к. JS —> нужны ()
+Конкретные БД
+db.unicorns.stats()
+
+Коллекции:
+1. Стандартные —> по умолчанию
+2. Ограниченные —> при лимите удаляет прошлые
+3. Системные (индексы)
+
+Ключ - значение
+name: "check"
+
+???
+Команды
+Создание коллекции (таблица) при вставке первого элемента (документа)
+
+?Создание
+db.createCollection("articles", {capped: true, size: 6000})
+// Лимит
+
+?Просмотр
+show collections // db.getCollectionNames()
+
+?Изменение
+db.articles.renameCollection("pages")
+
+db.articles.drop()
+
+?Статистика
+db.articles.stats()
+
+? Вставка элемента (документа) JSON
+Ключ title
+db.mybase.insert({title: "MySQL"})
+
+id автоматически
+4 байта = время
+3 байта = ид пк
+2 байта = ид процесса
+3 байта = локальный счетчик 
+
+
+//////////////////////////////////////////////////
+
+
+
+??? Часть 2
+
+?Создание и переключение между БД
+use БД
+
+?Создание коллекции (таблица)
+db.tpark.insert({"name": "Kolya", "age": 20})
+
+?show collections
+
+?Изменение
+db.tpark.renameCollection("tparkNew")
+
+?Поиск (вместо select)
+db.tpark.find()
+
+?Поиск по параметрам
+db.tpark.find({name: "Kolya", age: 20})
+
+???
+
+?Лимит
+db.tpark.find().limit(3)
+
+?Только возраст
+db.tpark.find({name: "Kolya"}, {age: 1})
+// если 0 то все кроме
+
+?Сортировка по созданию
+
+db.tpark.find().sort({ $natural: -1 }).limit(5)
+
+Сравнение
+
+$gt (больше чем)
+$lt (меньше чем)
+$gte (больше или равно)
+$lte (меньше или равно)
